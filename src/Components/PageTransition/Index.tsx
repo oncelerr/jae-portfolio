@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react'; 
 import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { text, curve, translate } from './anim';
+import { text, curve, translate } from './anim.ts';
 import './style.scss';
 
 const routes: Record<string, string> = {
   '/': 'Home',
   '/about': 'About',
   '/contact': 'Contact',
+  '/services': 'Services',
 };
 
 const anim = (variants: any) => {
@@ -30,7 +31,7 @@ interface Dimensions {
   height: number | null;
 }
 
-export default function Curve({ children, backgroundColor }: CurveProps) {
+export default function PageTransition({ children, backgroundColor }: CurveProps) {
   const location = useLocation();
   const [dimensions, setDimensions] = useState<Dimensions>({
     width: null,

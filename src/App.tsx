@@ -1,28 +1,66 @@
-import { Link, Routes, Route, useLocation } from 'react-router-dom';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import Home from './pages/Home/Index';
-import About from './pages/About/Index';
-import Contact from './pages/Contact/Index';
+import Navbar from './Components/Navbar/Index';
+import PageTransition from './Components/PageTransition/Index';
+import './App.css';
+import Home from './Pages/Home/Index';
+import Footer from './Components/Footer/Index';
+import { useState, useEffect } from 'react';
 
-export default function App() {
+function ScrollToTopButton() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.scrollY > 200) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // return (
+  //   isVisible && (
+  //     <button onClick={scrollToTop} className="scrollToTop">
+  //       <img src={arrowUp} alt="" />
+  //     </button>
+  //   )
+  // );
+}
+
+function AnimatedRoutes() {
   const location = useLocation();
-
+  
   return (
-    <div className="Main">
-      <div className="header">
-        <Link to="/">Home</Link>
-        <Link to="/about">About</Link>
-        <Link to="/contact">Contact</Link>
-      </div>
-
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
-      </AnimatePresence>
-    </div>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={
+          <PageTransition backgroundColor={''}>
+            <Home />
+          </PageTransition>
+        }/>
+      </Routes>
+    </AnimatePresence>
   );
 }
+
+function App() {
+  return (
+    <Router>
+      <Navbar/>
+      <AnimatedRoutes />
+      <Footer/>
+      <ScrollToTopButton />
+    </Router>
+  );
+}
+
+export default App;
